@@ -81,7 +81,6 @@ resource "aws_glue_crawler" "crm_idenitifer_crawler" {
   name          = var.crm_idenitifer_crawler_name
   role          = aws_iam_role.glue_service_role.arn
   database_name = aws_glue_catalog_database.crm_db.name
-  table_prefix  = "crm_"
 
   s3_target {
     path = "s3://aws-identity-behavior-poc-bucket/raw/crm/"
