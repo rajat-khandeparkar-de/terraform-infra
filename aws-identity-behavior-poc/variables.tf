@@ -37,3 +37,8 @@ variable "identity_resolution_job_name" {
   description = "identity resolution job name"
   type        = string
 }
+
+variable "behavior_features_job_name" {
+  description = "behavor features job name"
+  type = string
+}
