@@ -102,8 +102,11 @@ resource "aws_glue_job" "identity_resolution_job" {
   }
 
   default_arguments = {
-    "--job-language" = "python"
+    "--job-language"                = "python"
+    "--enable-continuous-cloudwatch-log" = "true"
+    "--enable-metrics"             = "true"
     "--TempDir"      = "s3://${aws_s3_bucket.aws_identity_behavior_poc_bucket.bucket}/temp/"
+    "--event_dt"                   = "2025-05-12"
     "--JOB_NAME"     = "crm-identity-resolution-job"
   }
 
@@ -111,4 +114,38 @@ resource "aws_glue_job" "identity_resolution_job" {
   max_retries       = 1
   number_of_workers = 2
   worker_type       = "G.1X"
+}
+
+
+resource "aws_glue_job" "behavior_features" {
+  name = var.behavior_features_job_name
+  role_arn = aws_iam_role.glue_service_role.arn
+
+  command {
+    name = "glueetl"
+    script_location = "s3://aws-identity-behavior-poc-bucket/scripts/behavior_features.py"
+    python_version = "3"
+  }
+
+  glue_version = "4.0"
+  max_retries = 1
+  number_of_workers = 5
+  worker_type = "G.1X"
+
+  execution_property {
+    max_concurrent_runs = 5
+  }
+
+  default_arguments = {
+    "--job-language"                = "python"
+    "--enable-continuous-cloudwatch-log" = "true"
+    "--enable-metrics"             = "true"
+    "--TempDir"      = "s3://${aws_s3_bucket.aws_identity_behavior_poc_bucket.bucket}/temp/"
+    "--event_dt"                   = "2025-05-12"
+  }
+
+  tags = {
+    "env"     = "dev"
+    "purpose" = "customer_features"
+  }
 }
