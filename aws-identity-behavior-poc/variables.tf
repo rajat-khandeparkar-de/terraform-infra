@@ -40,5 +40,15 @@ variable "identity_resolution_job_name" {
 
 variable "behavior_features_job_name" {
   description = "behavor features job name"
-  type = string
+  type        = string
+}
+
+variable "churn_scoring_job_name" {
+  description = "churn scoring i.e customer attrition score job name"
+  type        = string
+}
+
+variable "campaign_targets_job_name" {
+  description = "campaign targets"
+  type        = string
 }
